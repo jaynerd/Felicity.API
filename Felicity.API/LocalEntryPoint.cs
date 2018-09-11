@@ -1,16 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Felicity.API
 {
-    /// <summary>
-    /// The Main function can be used to run the ASP.NET Core application locally using the Kestrel webserver.
-    /// </summary>
     public class LocalEntryPoint
     {
         public static void Main(string[] args)
