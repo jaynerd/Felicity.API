@@ -15,10 +15,15 @@ namespace Felicity.API.Controllers
             _context = context;
         }
 
-        // GET api/values
+        // GET api/auth
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            var data = await _context.Users.ToListAsync();
+            if (data == null)
+            {
+                return NotFound();
+            }
             return Ok(await _context.Users.ToListAsync());
         }
 

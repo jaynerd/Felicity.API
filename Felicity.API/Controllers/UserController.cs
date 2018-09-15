@@ -1,0 +1,97 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Felicity.API.Data;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using Felicity.API.Models;
+
+namespace Felicity.API.Controllers
+{
+    [Route("api/[controller]")]
+    public class UserController : Controller
+    {
+        private readonly DataContext _context;
+
+        public UserController(DataContext context)
+        {
+            _context = context;
+        }
+
+        // GET api/user
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var data = await _context.Users.ToListAsync();
+            if (data == null)
+                return NotFound();
+
+            return Ok(await _context.Users.ToListAsync());
+        }
+
+        // GET api/user/getuserbyid/5
+        [HttpGet("getuserbyid/{id}")]
+        public async Task<IActionResult> GetUserById(int? id)
+        {
+            var data = await _context.Users.ToListAsync();
+            if (data == null || id == null)
+                return NotFound();
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        // POST api/user/createuser
+        [HttpPost("createuser")]
+        public async Task<IActionResult> CreateUser([FromBody]JObject jObject)
+        {
+            if (ModelState.IsValid)
+            {
+                var username = jObject.Value<string>("username");
+                var password = jObject.Value<string>("password");
+
+                if (string.IsNullOrWhiteSpace(username))
+                    return BadRequest("Please enter a valid username");
+              
+                if (string.IsNullOrWhiteSpace(password))
+                    return BadRequest("Please enter a valid password");
+
+                _context.Add(new User { UserName = username, Password = password });
+                await _context.SaveChangesAsync();
+
+                return Ok("Your account has been successfully registered");
+            }
+
+            return NotFound();
+        }
+
+
+
+        //// GET api/values/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
+
+        //// POST api/values
+        //[HttpPost]
+        //public void Post([FromBody]string value)
+        //{
+        //}
+
+        //// PUT api/values/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
+
+        //// DELETE api/values/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
+    }
+}
