@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
 using Amazon.S3;
 using Amazon.S3.Model;
-
 using Newtonsoft.Json;
 
 namespace Felicity.API.Controllers

@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Felicity.API.Data;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using Felicity.API.Data;
 using Felicity.API.Models;
+using Felicity.API.Services;
 
 namespace Felicity.API.Controllers
 {
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly DataContext _context;
+        readonly DataContext _context;
 
         public UserController(DataContext context)
         {
@@ -23,7 +24,7 @@ namespace Felicity.API.Controllers
         {
             var data = await _context.Users.ToListAsync();
             if (data == null)
-                return NotFound();
+                return NotFound("Unable to find users");
 
             return Ok(await _context.Users.ToListAsync());
         }
@@ -34,11 +35,11 @@ namespace Felicity.API.Controllers
         {
             var data = await _context.Users.ToListAsync();
             if (data == null || id == null)
-                return NotFound();
+                return NotFound("Please enter a valid id");
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
             if (user == null)
-                return NotFound();
+                return NotFound("Unable to find the requested user");
 
             return Ok(user);
         }
@@ -54,27 +55,27 @@ namespace Felicity.API.Controllers
 
                 if (string.IsNullOrWhiteSpace(username))
                     return BadRequest("Please enter a valid username");
-              
+
                 if (string.IsNullOrWhiteSpace(password))
                     return BadRequest("Please enter a valid password");
 
-                _context.Add(new User { UserName = username, Password = password });
+                JObject credentials = SecurityService.EncodePassword(password);
+
+                User user = new User
+                {
+                    UserName = username,
+                    Password = credentials.Value<string>("hash"),
+                    Salt = credentials.Value<string>("salt")
+                };
+
+                _context.Add(user);
                 await _context.SaveChangesAsync();
 
                 return Ok("Your account has been successfully registered");
             }
 
-            return NotFound();
+            return BadRequest("Account registration failed");
         }
-
-
-
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
 
         //// POST api/values
         //[HttpPost]

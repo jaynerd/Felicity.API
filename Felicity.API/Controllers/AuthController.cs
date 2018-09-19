@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Felicity.API.Data;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using Felicity.API.Data;
+using Felicity.API.Models;
+using Felicity.API.Services;
 
 namespace Felicity.API.Controllers
 {
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly DataContext _context;
+        readonly DataContext _context;
 
         public AuthController(DataContext context)
         {
@@ -27,29 +30,30 @@ namespace Felicity.API.Controllers
             return Ok(await _context.Users.ToListAsync());
         }
 
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        // POST api/auth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody]JObject jObject)
+        {
+            var username = jObject.Value<string>("username");
+            var password = jObject.Value<string>("password");
 
-        //// POST api/values
-        //[HttpPost]
-        //public void Post([FromBody]string value)
-        //{
-        //}
+            if (string.IsNullOrWhiteSpace(username))
+                return BadRequest("Please enter a valid username");
 
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
+            if (string.IsNullOrWhiteSpace(password))
+                return BadRequest("Please enter a valid password");
 
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+            User user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == username);
+
+            if (user == null) 
+                return BadRequest("Invalid username or password");
+
+            bool valid = SecurityService.ValidatePassword(user.Password, user.Salt, password);
+
+            if (valid) 
+                return Ok("Login success");
+
+            return BadRequest("Login failed");
+        }
     }
 }
