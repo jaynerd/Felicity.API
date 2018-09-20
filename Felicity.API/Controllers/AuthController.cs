@@ -37,23 +37,23 @@ namespace Felicity.API.Controllers
             var username = jObject.Value<string>("username");
             var password = jObject.Value<string>("password");
 
-            if (string.IsNullOrWhiteSpace(username))
-                return BadRequest("Please enter a valid username");
+            //if (string.IsNullOrWhiteSpace(username))
+            //    return BadRequest("Please enter a valid username");
 
-            if (string.IsNullOrWhiteSpace(password))
-                return BadRequest("Please enter a valid password");
+            //if (string.IsNullOrWhiteSpace(password))
+            //    return BadRequest("Please enter a valid password");
 
             User user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == username);
 
-            if (user == null) 
-                return BadRequest("Invalid username or password");
+            if (user == null)
+                return Ok("Account not available");
 
             bool valid = SecurityService.ValidatePassword(user.Password, user.Salt, password);
 
-            if (valid) 
-                return Ok("Login success");
+            if (valid)
+                return Ok(true);
 
-            return BadRequest("Login failed");
+            return Ok("Invalid username or password");
         }
     }
 }

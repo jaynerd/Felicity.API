@@ -54,10 +54,10 @@ namespace Felicity.API.Controllers
                 var password = jObject.Value<string>("password");
 
                 if (string.IsNullOrWhiteSpace(username))
-                    return BadRequest("Please enter a valid username");
+                    return Ok("Please enter a valid username");
 
                 if (string.IsNullOrWhiteSpace(password))
-                    return BadRequest("Please enter a valid password");
+                    return Ok("Please enter a valid password");
 
                 JObject credentials = SecurityService.EncodePassword(password);
 
@@ -71,10 +71,10 @@ namespace Felicity.API.Controllers
                 _context.Add(user);
                 await _context.SaveChangesAsync();
 
-                return Ok("Your account has been successfully registered");
+                return Ok("Your account has been successfully registered"); // should return true
             }
 
-            return BadRequest("Account registration failed");
+            return Ok("Account registration failed");
         }
 
         //// POST api/values
