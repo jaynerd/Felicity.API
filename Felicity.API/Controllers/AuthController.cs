@@ -46,12 +46,12 @@ namespace Felicity.API.Controllers
             User user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == username);
 
             if (user == null)
-                return Ok("Account not available");
+                return Ok("Account not found");
 
             bool valid = SecurityService.ValidatePassword(user.Password, user.Salt, password);
 
             if (valid)
-                return Ok(true);
+                return Ok(user);
 
             return Ok("Invalid username or password");
         }

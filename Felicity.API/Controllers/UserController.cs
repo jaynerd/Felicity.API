@@ -37,7 +37,7 @@ namespace Felicity.API.Controllers
             if (data == null || id == null)
                 return NotFound("Please enter a valid id");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
             if (user == null)
                 return NotFound("Unable to find the requested user");
 
@@ -59,6 +59,9 @@ namespace Felicity.API.Controllers
                 if (string.IsNullOrWhiteSpace(password))
                     return Ok("Please enter a valid password");
 
+                if (await _context.Users.SingleOrDefaultAsync(u => u.UserName == username) != null)
+                    return Ok("Username already taken");
+
                 JObject credentials = SecurityService.EncodePassword(password);
 
                 User user = new User
@@ -71,7 +74,7 @@ namespace Felicity.API.Controllers
                 _context.Add(user);
                 await _context.SaveChangesAsync();
 
-                return Ok("Your account has been successfully registered"); // should return true
+                return Ok("true");
             }
 
             return Ok("Account registration failed");

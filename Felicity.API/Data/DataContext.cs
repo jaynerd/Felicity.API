@@ -14,6 +14,10 @@ namespace Felicity.API.Data
         {
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Team>().ToTable("Teams");
+
+            modelBuilder.Entity<TeamUser>()
+                .ToTable("TeamUsers")
+                .HasKey(t => new { t.TeamId, t.UserId });
         }
     }
 }

@@ -9,19 +9,19 @@ namespace Felicity.API
     {
         public static void Main(string[] args)
         {
-            //var host = BuildWebHost(args);
+            var host = BuildWebHost(args);
 
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
 
-            //    var context = services.GetRequiredService<DataContext>();
-            //    DbInitializer.Initialize(context);
-            //}
+                var context = services.GetRequiredService<DataContext>();
+                DbInitializer.Initialize(context);
+            }
 
-            //host.Run();
+            host.Run();
 
-            BuildWebHost(args).Run();
+            //BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
