@@ -23,8 +23,9 @@ namespace Felicity.API.Controllers
         public async Task<IActionResult> Get()
         {
             var data = await _context.Users.ToListAsync();
+
             if (data == null)
-                return NotFound("Unable to find users");
+                return NotFound("Unable to find any users");
 
             return Ok(await _context.Users.ToListAsync());
         }
@@ -34,10 +35,12 @@ namespace Felicity.API.Controllers
         public async Task<IActionResult> GetUserById(int? id)
         {
             var data = await _context.Users.ToListAsync();
+
             if (data == null || id == null)
                 return NotFound("Please enter a valid id");
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+
             if (user == null)
                 return NotFound("Unable to find the requested user");
 
@@ -74,7 +77,7 @@ namespace Felicity.API.Controllers
                 _context.Add(user);
                 await _context.SaveChangesAsync();
 
-                return Ok("true");
+                return Ok(true);
             }
 
             return Ok("Account registration failed");

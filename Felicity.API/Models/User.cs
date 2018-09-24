@@ -8,8 +8,5 @@ namespace Felicity.API.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }
-        public int TeamCount { get; set; }
-
-        public ICollection<TeamUser> TeamUsers { get; set; } = new List<TeamUser>();
     }
 }

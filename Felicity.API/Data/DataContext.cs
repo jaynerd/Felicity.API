@@ -9,6 +9,7 @@ namespace Felicity.API.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamUser> TeamUser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,7 +18,7 @@ namespace Felicity.API.Data
 
             modelBuilder.Entity<TeamUser>()
                 .ToTable("TeamUsers")
-                .HasKey(t => new { t.TeamId, t.UserId });
+                .HasKey(tu => new { tu.TeamId, tu.UserId });
         }
     }
 }

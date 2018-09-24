@@ -23,10 +23,12 @@ namespace Felicity.API.Controllers
         public async Task<IActionResult> Get()
         {
             var data = await _context.Users.ToListAsync();
+
             if (data == null)
             {
                 return NotFound();
             }
+
             return Ok(await _context.Users.ToListAsync());
         }
 

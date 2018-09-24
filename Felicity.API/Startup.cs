@@ -31,6 +31,7 @@ namespace Felicity.API
                     {
                         builder
                         .WithOrigins("https://sdm-felicity.herokuapp.com")
+                        //.WithOrigins("http://localhost:8080")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
