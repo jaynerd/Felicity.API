@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Felicity.API.Models
+﻿namespace Felicity.API.Models
 {
     public class User
     {

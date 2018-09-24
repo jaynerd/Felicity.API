@@ -9,29 +9,29 @@ namespace Felicity.API.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            var users = new[] {
-                new User { UserName = "nyk", Password = "nyk" },
-                new User { UserName = "sienna", Password = "sienna" },
-                new User { UserName = "oliver", Password = "oliver" },
-                new User { UserName = "nishit", Password = "nishit" },
-                new User { UserName = "paul", Password = "paul" },
-                new User { UserName = "michelle", Password = "michelle" },
-                new User { UserName = "hannah", Password = "hannah" },
-            };
+            //var users = new[] {
+            //    new User { UserName = "nyk", Password = "nyk" },
+            //    new User { UserName = "sienna", Password = "sienna" },
+            //    new User { UserName = "oliver", Password = "oliver" },
+            //    new User { UserName = "nishit", Password = "nishit" },
+            //    new User { UserName = "paul", Password = "paul" },
+            //    new User { UserName = "michelle", Password = "michelle" },
+            //    new User { UserName = "hannah", Password = "hannah" },
+            //};
 
-            foreach (User u in users)
-                context.Users.Add(u);
+            //foreach (User u in users)
+            //    context.Users.Add(u);
 
-            context.SaveChanges();
+            //context.SaveChanges();
 
-            var teams = new[] {
-                new Team { TeamName = "beggars" },
-                new Team { TeamName = "knights" },
-                new Team { TeamName = "scholars" }
-            };
+            //var teams = new[] {
+            //    new Team { TeamName = "beggars" },
+            //    new Team { TeamName = "knights" },
+            //    new Team { TeamName = "scholars" }
+            //};
 
-            foreach (Team t in teams)
-                context.Teams.Add(t);
+            //foreach (Team t in teams)
+            //    context.Teams.Add(t);
 
             context.SaveChanges();
 

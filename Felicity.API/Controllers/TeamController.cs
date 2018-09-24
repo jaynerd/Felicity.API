@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Felicity.API.Data;
 using Felicity.API.Models;
-using Felicity.API.Services;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Felicity.API.Controllers
 {
@@ -32,11 +31,12 @@ namespace Felicity.API.Controllers
             return Ok(await _context.Teams.ToListAsync());
         }
 
-        // GET api/user/getteambyid/5
+        // GET api/team/getteambyid/5
         [HttpGet("getteambyid/{id}")]
         public async Task<IActionResult> GetTeamById(int? id)
         {
             var data = await _context.Teams.ToListAsync();
+
             if (data == null || id == null)
                 return NotFound("Please enter a valid id");
 
@@ -48,12 +48,21 @@ namespace Felicity.API.Controllers
             return Ok(team);
         }
 
-        // GET api/user/getteambyuserid
+        // GET api/team/getteambycode/5
+        [HttpGet("getteambycode/{code}")]
+        public async Task<IActionResult> GetTeamByCode(int? code)
+        {
+            // fix if multiple team have same code, this will cause a problem
+            var teamCode = code;
+            var team = await _context.Teams.SingleOrDefaultAsync(t => t.TeamCode == teamCode);
+            return Ok(team);
+        }
+
+        // GET api/team/getteambyuserid
         [HttpGet("getteamsbyuserid/{id}")]
         public IActionResult GetTeamsByUserId(int? id)
         {
             var userId = id;
- 
             var teams = _context.TeamUser.Where(tu => tu.UserId == userId);
 
             List<Team> userTeams = new List<Team>();
@@ -73,6 +82,7 @@ namespace Felicity.API.Controllers
             if (ModelState.IsValid)
             {
                 var userId = jObject.Value<int>("userId");
+                var teamcode = jObject.Value<int>("teamcode");
                 var teamname = jObject.Value<string>("teamname");
 
                 if (string.IsNullOrWhiteSpace(teamname))
@@ -81,7 +91,7 @@ namespace Felicity.API.Controllers
                 if (await _context.Teams.SingleOrDefaultAsync(t => t.TeamName == teamname) != null)
                     return Ok("Team name already taken");
 
-                Team team = new Team { TeamName = teamname };
+                Team team = new Team { TeamCode=teamcode, TeamName = teamname };
                 User user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
 
                 _context.Add(team);
